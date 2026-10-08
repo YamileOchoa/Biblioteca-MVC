@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Libro>
+@{
+    ViewData["Title"] = "Libros";
+}
+
+<div class="page-header">
+    <div>
+        <h1><span class="title-icon"><i class="bi bi-book"></i></span>Libros</h1>
+        <p class="subtitle">Catálogo de la biblioteca · @Model.Count() resultado(s)</p>
+    </div>
+    <a asp-action="Create" class="btn btn-brand btn-lg">
+        <i class="bi bi-plus-lg me-1"></i>Nuevo libro
+    </a>
+</div>
+
+<div class="card-soft p-3 mb-4">
+    <form method="get" asp-action="Index" class="row g-2">
+        <div class="col">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="titulo" value="@ViewData["Busqueda"]" class="form-control"
+                       placeholder="Buscar por título..." />
+            </div>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-brand">Buscar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-x-lg"></i></a>
+        </div>
+    </form>
+</div>
+
+<div class="card-soft">
+    <div class="table-responsive">
+        <table class="table table-modern align-middle">
+            <thead>
+                <tr>
+                    <th>Libro</th>
+                    <th>ISBN</th>
+                    <th>Autor</th>
+                    <th class="text-center">Stock</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var libro in Model)
+                {
+                    <partial name="_LibroFila" model="libro" />
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            No se encontraron libros.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

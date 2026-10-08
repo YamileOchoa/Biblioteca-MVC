@@ -1,0 +1,124 @@
+﻿@model IEnumerable<PrestamoReporte>
+@{
+    ViewData["Title"] = "Reporte de préstamos";
+    var total = Model.Count();
+    var pendientes = Model.Count(p => p.Estado == "Pendiente");
+    var devueltos = Model.Count(p => p.Estado == "Devuelto");
+    var vencidos = Model.Count(p => p.Estado == "Pendiente" && p.FechaLimite.Date < DateTime.Today);
+}
+
+<div class="page-header">
+    <div>
+        <h1><span class="title-icon"><i class="bi bi-clipboard-data"></i></span>Reporte de préstamos</h1>
+        <p class="subtitle">Filtra los préstamos por rango de fechas</p>
+    </div>
+</div>
+
+<div class="card-soft p-3 mb-4">
+    <form method="get" asp-action="Reporte" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label for="desde" class="form-label">Desde</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                <input type="date" id="desde" name="desde" value="@ViewData["Desde"]" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label for="hasta" class="form-label">Hasta</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                <input type="date" id="hasta" name="hasta" value="@ViewData["Hasta"]" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-brand w-100"><i class="bi bi-funnel me-1"></i>Filtrar</button>
+        </div>
+    </form>
+</div>
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="stat-card bg-grad-1">
+            <div><div class="num">@total</div><div class="lbl">Registros</div></div>
+            <i class="bi bi-journals"></i>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card bg-grad-2">
+            <div><div class="num">@pendientes</div><div class="lbl">Pendientes</div></div>
+            <i class="bi bi-hourglass-split"></i>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card bg-grad-3">
+            <div><div class="num">@devueltos</div><div class="lbl">Devueltos</div></div>
+            <i class="bi bi-check2-circle"></i>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card bg-grad-4">
+            <div><div class="num">@vencidos</div><div class="lbl">Vencidos</div></div>
+            <i class="bi bi-alarm"></i>
+        </div>
+    </div>
+</div>
+
+<div class="card-soft">
+    <div class="table-responsive">
+        <table class="table table-modern align-middle">
+            <thead>
+                <tr>
+                    <th>N.º</th>
+                    <th>Socio</th>
+                    <th>Libro</th>
+                    <th>Préstamo</th>
+                    <th>Fecha límite</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var p in Model)
+            {
+                var vencido = p.Estado == "Pendiente" && p.FechaLimite.Date < DateTime.Today;
+                <tr>
+                    <td><span class="fw-bold text-muted">#@p.PrestamoId</span></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="avatar" style="width:34px;height:34px;font-size:.85rem;">@p.SocioNombre.Substring(0, 1).ToUpper()</span>
+                            <span class="fw-semibold">@p.SocioNombre</span>
+                        </div>
+                    </td>
+                    <td><i class="bi bi-book text-muted me-1"></i>@p.LibroTitulo</td>
+                    <td>@p.FechaPrestamo.ToString("dd/MM/yyyy")</td>
+                    <td class="@(vencido ? "text-danger fw-bold" : "")">@p.FechaLimite.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (p.Estado == "Devuelto")
+                        {
+                            <span class="badge rounded-pill text-bg-success"><i class="bi bi-check-lg me-1"></i>Devuelto</span>
+                        }
+                        else if (vencido)
+                        {
+                            <span class="badge rounded-pill text-bg-danger"><i class="bi bi-alarm me-1"></i>Vencido</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill text-bg-warning"><i class="bi bi-hourglass-split me-1"></i>Pendiente</span>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        No hay préstamos en el rango seleccionado.
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

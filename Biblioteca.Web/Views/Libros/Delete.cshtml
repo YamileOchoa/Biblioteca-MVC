@@ -1,0 +1,39 @@
+﻿@model Libro
+@{
+    ViewData["Title"] = "Eliminar libro";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card-soft border-danger">
+            <div class="p-4 text-center" style="background: linear-gradient(135deg,#ef4444,#be123c); color:#fff;">
+                <i class="bi bi-exclamation-triangle-fill" style="font-size:2.8rem;"></i>
+                <h3 class="fw-bold mt-2 mb-0">¿Eliminar este libro?</h3>
+                <small style="opacity:.85;">Dejará de aparecer en el listado</small>
+            </div>
+
+            <div class="detail-item">
+                <div class="k">@Html.DisplayNameFor(m => m.Titulo)</div>
+                <div class="v">@Model.Titulo</div>
+            </div>
+            <div class="detail-item">
+                <div class="k">@Html.DisplayNameFor(m => m.ISBN)</div>
+                <div class="v"><code>@Model.ISBN</code></div>
+            </div>
+            <div class="detail-item">
+                <div class="k">@Html.DisplayNameFor(m => m.AutorNombre)</div>
+                <div class="v">@Model.AutorNombre</div>
+            </div>
+            <div class="detail-item">
+                <div class="k">@Html.DisplayNameFor(m => m.Ejemplares)</div>
+                <div class="v">@Model.Ejemplares</div>
+            </div>
+
+            <form asp-action="Delete" asp-route-id="@Model.LibroId" method="post"
+                  class="p-3 d-flex gap-2 justify-content-end bg-body-tertiary">
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Sí, eliminar</button>
+            </form>
+        </div>
+    </div>
+</div>

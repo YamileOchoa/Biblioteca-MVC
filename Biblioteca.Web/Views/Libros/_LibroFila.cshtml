@@ -1,0 +1,31 @@
+﻿@model Libro
+
+<tr>
+    <td>
+        <div class="d-flex align-items-center gap-3">
+            <span class="book-icon"><i class="bi bi-book-half"></i></span>
+            <span class="fw-semibold">@Model.Titulo</span>
+        </div>
+    </td>
+    <td><code>@Model.ISBN</code></td>
+    <td><i class="bi bi-person-fill text-muted me-1"></i>@Model.AutorNombre</td>
+    <td class="text-center">
+        @if (Model.Ejemplares == 0)
+        {
+            <span class="badge rounded-pill text-bg-danger">Agotado</span>
+        }
+        else if (Model.Ejemplares <= 2)
+        {
+            <span class="badge rounded-pill text-bg-warning">@Model.Ejemplares · Pocos</span>
+        }
+        else
+        {
+            <span class="badge rounded-pill text-bg-success">@Model.Ejemplares disponibles</span>
+        }
+    </td>
+    <td class="text-end">
+        <a asp-action="Details" asp-route-id="@Model.LibroId" class="btn btn-icon btn-outline-info" title="Detalles"><i class="bi bi-eye"></i></a>
+        <a asp-action="Edit" asp-route-id="@Model.LibroId" class="btn btn-icon btn-outline-warning" title="Editar"><i class="bi bi-pencil"></i></a>
+        <a asp-action="Delete" asp-route-id="@Model.LibroId" class="btn btn-icon btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+    </td>
+</tr>

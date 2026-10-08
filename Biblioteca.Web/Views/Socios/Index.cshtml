@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Socio>
+@{
+    ViewData["Title"] = "Socios";
+}
+
+<div class="page-header">
+    <div>
+        <h1><span class="title-icon"><i class="bi bi-people"></i></span>Socios</h1>
+        <p class="subtitle">@Model.Count() socio(s) activo(s)</p>
+    </div>
+    <a asp-action="Create" class="btn btn-brand btn-lg">
+        <i class="bi bi-person-plus-fill me-1"></i>Nuevo socio
+    </a>
+</div>
+
+<div class="card-soft">
+    <div class="table-responsive">
+        <table class="table table-modern align-middle">
+            <thead>
+                <tr>
+                    <th>Socio</th>
+                    <th>DNI</th>
+                    <th>Correo electrónico</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var socio in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="avatar">@socio.Nombre.Substring(0, 1).ToUpper()</span>
+                            <span class="fw-semibold">@socio.Nombre</span>
+                        </div>
+                    </td>
+                    <td><span class="badge text-bg-light border"><i class="bi bi-person-vcard me-1"></i>@socio.DNI</span></td>
+                    <td>
+                        @if (!string.IsNullOrWhiteSpace(socio.Email))
+                        {
+                            <i class="bi bi-envelope me-1 text-muted"></i>@socio.Email
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-5">
+                        <i class="bi bi-people fs-1 d-block mb-2"></i>
+                        No hay socios registrados.
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
